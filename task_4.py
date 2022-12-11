@@ -1,21 +1,17 @@
-import logging
+import types
 
-_LOGGER = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
-
-result = []
-
-def flat_generator(list_o):
-    _LOGGER.info(list_o)
-    for item in list_o:
-        if isinstance(item, list) and len(item) != 0:
-            flat_generator(item)
+def flat_generator(list_of_list):
+    for item in list_of_list:
+        if isinstance(item, list) and len(item)>1:
+            yield from flat_generator(item)
+        elif isinstance(item, bool | int | None):
+            yield item
+        elif isinstance(item, list) and len(item) == 1:
+            for i_item in flat_generator(item):
+                yield i_item
         else:
-            result.append(item)
-    return result.pop(0)
-
-
-
+            yield from item
+    
 
 def test_4():
     
@@ -29,17 +25,12 @@ def test_4():
             flat_generator(list_of_lists_2),
             ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None, '!']
     ):
-        print(flat_iterator_item)
-        # print(check_item)
+        assert flat_iterator_item == check_item
 
-        # assert flat_iterator_item == check_item
+    assert list(flat_generator(list_of_lists_2)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None, '!']
 
-    # print(list(flat_generator(list_of_lists_2)))
-    # assert list(flat_generator(list_of_lists_2)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None, '!']
-
-    # assert isinstance(flat_generator(list_of_lists_2), types.GeneratorType)
+    assert isinstance(flat_generator(list_of_lists_2), types.GeneratorType)
 
 
 if __name__ == '__main__':
-    # print((flat_generator(list_of_lists_2)))
     test_4()

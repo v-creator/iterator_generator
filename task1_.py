@@ -1,3 +1,5 @@
+from functools import reduce
+
 class FlatIterator:
 
     def __init__(self, list_of_list):
@@ -5,11 +7,10 @@ class FlatIterator:
 
     def __iter__(self):
         self.count = -1
+        self.items = reduce(lambda x,y: x + y, self.list_of_list)
         return self
 
     def __next__(self):
-        self.items = []
-        [self.items.extend(self.list_of_list[x]) for x in range(len(self.list_of_list))]
         self.count += 1
         if self.count == len(self.items):
             raise StopIteration

@@ -3,17 +3,21 @@ class FlatIterator:
 
     def __init__(self, list_of_list):
         self.list_of_list = list_of_list
+    
+    def red(list):
+        return reduce(lambda x,y: x + y, list)
 
     def __iter__(self):
         self.count = -1
         self.exit = len(self.list_of_list)
-        self.items = []
-        
         return self
     
     def __next__(self):
-        sum_all = reduce(lambda x,y: x + y, self.list_of_list)
-        print(sum_all)
+        for item in self.list_of_list:
+            if any(isinstance(i, list) for i in item):
+                print(item)
+                item = self.red(item)
+                print(item)
             
 
 

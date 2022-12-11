@@ -3,19 +3,17 @@ from functools import reduce
 class FlatIterator:
 
     def __init__(self, list_of_list):
-        self.list_of_list = list_of_list
+        self.list_of_list = reduce(lambda x,y: x + y, list_of_list)
 
     def __iter__(self):
         self.count = -1
-        self.items = reduce(lambda x,y: x + y, self.list_of_list)
         return self
 
     def __next__(self):
         self.count += 1
-        if self.count == len(self.items):
+        if self.count == len(self.list_of_list):
             raise StopIteration
-        item = self.items[self.count]
-        return item
+        return self.list_of_list[self.count]
 
 
 def test_1():
